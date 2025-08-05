@@ -34,6 +34,11 @@ class Contacto extends Model
         return $query->where('activo', true);
     }
 
+    public function scopeActivos($query)
+    {
+        return $query->where('activo', true);
+    }
+
     public function scopeTipo($query, $tipo)
     {
         return $query->where('tipo', $tipo);

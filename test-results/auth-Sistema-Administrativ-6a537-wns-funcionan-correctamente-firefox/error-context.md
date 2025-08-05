@@ -1,0 +1,109 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - link "Sistema Admin":
+    - /url: http://127.0.0.1:8000/dashboard
+    - img
+    - text: Sistema Admin
+  - link "Dashboard":
+    - /url: http://127.0.0.1:8000/dashboard
+    - img
+    - text: Dashboard
+  - button "Contactos":
+    - img
+    - text: Contactos
+    - img
+  - link "Ver Contactos":
+    - /url: "#"
+  - link "Nuevo Contacto":
+    - /url: "#"
+  - link "Clientes":
+    - /url: "#"
+  - link "Proveedores":
+    - /url: "#"
+  - button "Transacciones":
+    - img
+    - text: Transacciones
+    - img
+  - link "Reportes":
+    - /url: "#"
+    - img
+    - text: Reportes
+  - button:
+    - img
+  - button "A Administrador":
+    - text: A Administrador
+    - img
+- banner:
+  - heading "Dashboard" [level=2]
+  - text: Bienvenido, Administrador
+- main:
+  - img
+  - term: Total Contactos
+  - definition: "8"
+  - img
+  - term: Clientes
+  - definition: "5"
+  - img
+  - term: Proveedores
+  - definition: "5"
+  - img
+  - term: Transacciones del Mes
+  - definition: "1"
+  - heading "Transacciones Recientes" [level=3]
+  - paragraph: ING-001
+  - paragraph: Juan Pérez García
+  - paragraph: +$75,400.00
+  - paragraph: 31/07/2025
+  - paragraph: ING-002
+  - paragraph: Empresa Tech Solutions
+  - paragraph: +$8,004.00
+  - paragraph: 26/07/2025
+  - paragraph: EGR-001
+  - paragraph: Constructora ABC S.A. de C.V.
+  - paragraph: "-$15,138.00"
+  - paragraph: 02/08/2025
+  - paragraph: EGR-002
+  - paragraph: Ferretería El Martillo
+  - paragraph: "-$2,784.00"
+  - paragraph: 29/07/2025
+  - paragraph: EGR-003
+  - paragraph: Sin contacto
+  - paragraph: "-$2,146.00"
+  - paragraph: 21/07/2025
+  - heading "Resumen Financiero" [level=3]
+  - img
+  - paragraph: Ingresos del Mes
+  - paragraph: August 2025
+  - paragraph: $0.00
+  - img
+  - paragraph: Egresos del Mes
+  - paragraph: August 2025
+  - paragraph: $15,138.00
+  - img
+  - paragraph: Balance del Mes
+  - paragraph: August 2025
+  - paragraph: $-15,138.00
+  - heading "Acciones Rápidas" [level=3]
+  - link "Nueva Transacción Registrar ingreso o egreso":
+    - /url: "#"
+    - img
+    - heading "Nueva Transacción" [level=3]
+    - paragraph: Registrar ingreso o egreso
+  - link "Nuevo Contacto Agregar cliente o proveedor":
+    - /url: "#"
+    - img
+    - heading "Nuevo Contacto" [level=3]
+    - paragraph: Agregar cliente o proveedor
+  - link "Ver Reportes Análisis y estadísticas":
+    - /url: "#"
+    - img
+    - heading "Ver Reportes" [level=3]
+    - paragraph: Análisis y estadísticas
+  - link "Configuración Métodos de pago y más":
+    - /url: "#"
+    - img
+    - heading "Configuración" [level=3]
+    - paragraph: Métodos de pago y más
+```

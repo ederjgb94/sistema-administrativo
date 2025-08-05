@@ -15,22 +15,22 @@ class DatabaseSeeder extends Seeder
     {
         // Crear usuario administrador
         User::updateOrCreate(
-            ['email' => 'admin@admin.com'],
+            ['email' => 'admin@petrotekno.com'],
             [
                 'name' => 'Administrador',
-                'email' => 'admin@admin.com',
-                'password' => bcrypt('admin'),
+                'email' => 'admin@petrotekno.com',
+                'password' => bcrypt('admin123'),
                 'email_verified_at' => now(),
             ]
         );
 
-        // Crear usuario de prueba si no existe
+        // Crear usuario de prueba alternativo
         User::updateOrCreate(
-            ['email' => 'test@example.com'],
+            ['email' => 'admin@admin.com'],
             [
-                'name' => 'Test User',
-                'email' => 'test@example.com',
-                'password' => bcrypt('password'),
+                'name' => 'Admin',
+                'email' => 'admin@admin.com',
+                'password' => bcrypt('admin'),
                 'email_verified_at' => now(),
             ]
         );
