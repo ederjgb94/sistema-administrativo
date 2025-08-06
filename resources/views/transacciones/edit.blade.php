@@ -497,10 +497,11 @@
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <span class="text-gray-500 sm:text-sm">$</span>
                                 </div>
-                                <input type="number" name="total" id="total" value="{{ old('total', $transaccione->total) }}" required
-                                       step="0.01" min="0.01"
-                                       class="pl-7 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('total') border-red-300 @enderror"
-                                       placeholder="0.00">
+                                <input type="text" name="total" id="total" value="{{ old('total', number_format($transaccione->total, 2)) }}" required
+                                       class="pl-7 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('total') border-red-300 @enderror text-2xl font-bold total-field"
+                                       placeholder="0.00"
+                                       oninput="formatearTotal(this)"
+                                       onblur="validarTotal(this)">
                             </div>
                             @error('total')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -783,10 +784,30 @@ function mostrarArchivosSeleccionados(input) {
         const div = document.createElement('div');
         div.className = 'bg-gray-50 border border-gray-200 rounded-lg p-3';
         
+        // Header con título y botón de limpiar
+        const header = document.createElement('div');
+        header.className = 'flex items-center justify-between mb-2';
+        
         const title = document.createElement('p');
-        title.className = 'text-sm font-medium text-gray-900 mb-2';
+        title.className = 'text-sm font-medium text-gray-900';
         title.textContent = `${input.files.length} archivo${input.files.length > 1 ? 's' : ''} seleccionado${input.files.length > 1 ? 's' : ''}:`;
-        div.appendChild(title);
+        
+        const clearButton = document.createElement('button');
+        clearButton.type = 'button';
+        clearButton.className = 'text-xs text-red-600 hover:text-red-800 focus:outline-none flex items-center space-x-1';
+        clearButton.innerHTML = `
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+            <span>Limpiar todos</span>
+        `;
+        clearButton.onclick = function() {
+            limpiarArchivos();
+        };
+        
+        header.appendChild(title);
+        header.appendChild(clearButton);
+        div.appendChild(header);
         
         const list = document.createElement('ul');
         list.className = 'text-sm text-gray-600 space-y-1';
@@ -809,6 +830,95 @@ function mostrarArchivosSeleccionados(input) {
         div.appendChild(list);
         container.appendChild(div);
     }
+}
+
+// Nueva función para limpiar archivos
+function limpiarArchivos() {
+    const input = document.getElementById('factura_archivos');
+    const container = document.getElementById('archivos-seleccionados');
+    
+    if (input) {
+        input.value = '';
+    }
+    
+    if (container) {
+        container.innerHTML = '';
+    }
+}
+
+// Configurar el color del total al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    const tipoSelect = document.getElementById('tipo');
+    
+    function actualizarColorTotal() {
+        const tipo = tipoSelect.value;
+        const totalInput = document.getElementById('total');
+        
+        if (totalInput) {
+            // Remover clases de color previas
+            totalInput.classList.remove('text-green-600', 'text-red-600', 'text-gray-900');
+            
+            // Aplicar color según el tipo
+            if (tipo === 'ingreso') {
+                totalInput.classList.add('text-green-600');
+            } else if (tipo === 'egreso') {
+                totalInput.classList.add('text-red-600');
+            } else {
+                totalInput.classList.add('text-gray-900');
+            }
+        }
+    }
+    
+    if (tipoSelect) {
+        tipoSelect.addEventListener('change', actualizarColorTotal);
+        // Ejecutar al cargar
+        actualizarColorTotal();
+    }
+});
+
+// Funciones para formatear el total
+function formatearTotal(input) {
+    let value = input.value;
+    
+    // Remover todo excepto números y punto
+    value = value.replace(/[^\d.]/g, '');
+    
+    // Asegurar solo un punto decimal
+    const parts = value.split('.');
+    if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    // Limitar a 2 decimales máximo
+    if (parts.length === 2 && parts[1].length > 2) {
+        value = parts[0] + '.' + parts[1].substring(0, 2);
+    }
+    
+    // Actualizar el valor sin formatear mientras escribe
+    input.value = value;
+}
+
+function validarTotal(input) {
+    let value = input.value.replace(/[^\d.]/g, ''); // Solo números y punto
+    
+    if (!value) {
+        input.value = '';
+        return;
+    }
+    
+    const number = parseFloat(value);
+    
+    if (isNaN(number) || number <= 0) {
+        input.value = '';
+        return;
+    }
+    
+    // Formatear con comas para miles y exactamente 2 decimales al perder el foco
+    const formatted = number.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    input.value = formatted;
 }
 </script>
 @endsection
