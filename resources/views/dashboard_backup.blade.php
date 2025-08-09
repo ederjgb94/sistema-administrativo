@@ -197,7 +197,7 @@
                     <div class="group relative" id="reporteDropdownContainer">
                         <button type="button" 
                                 id="reporteButton"
-                                onclick="toggleReporteDropdown()"
+                                onclick="window.toggleDropdown && window.toggleDropdown()"
                                 class="w-full bg-gradient-to-r from-indigo-500 to-indigo-600 p-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-lg text-center hover:from-indigo-600 hover:to-indigo-700 transition duration-200">
                             <div>
                                 <span class="rounded-lg inline-flex p-2 bg-white bg-opacity-20">
@@ -215,52 +215,34 @@
                                 </p>
                             </div>
                         </button>
-
-                        <!-- Dropdown Menu Flotante -->
+                        
+                        <!-- Dropdown Menu -->
                         <div id="reporteDropdown" 
-                             class="hidden fixed bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
-                             style="z-index: 999999; min-width: 320px;">
-                            <div class="py-3">
-                                <div class="px-4 py-2 border-b border-gray-100">
-                                    <h3 class="text-sm font-semibold text-gray-900">Seleccionar formato</h3>
-                                    <p class="text-xs text-gray-500">Elige el formato para descargar</p>
-                                </div>
-                                
+                             class="hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden"
+                             style="z-index: 9999;">
+                            <div class="py-1">
                                 <a href="{{ route('reporte.diario', ['formato' => 'pdf']) }}" 
-                                   class="flex items-center px-6 py-4 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-200 border-b border-gray-50">
-                                    <div class="flex-shrink-0 w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mr-4">
-                                        <!-- Icono Heroicon para PDF -->
-                                        <svg class="w-7 h-7 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                   class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition duration-150 border-b border-gray-100">
+                                    <div class="flex-shrink-0 w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                                        <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                                         </svg>
                                     </div>
                                     <div class="flex-1">
-                                        <div class="font-semibold text-gray-900 text-base">Descargar PDF</div>
-                                        <div class="text-sm text-gray-500">Reporte profesional con formato imprimible</div>
-                                    </div>
-                                    <div class="text-xs text-gray-400">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                        </svg>
+                                        <div class="font-semibold text-gray-900">Descargar PDF</div>
+                                        <div class="text-xs text-gray-500">Reporte profesional con formato</div>
                                     </div>
                                 </a>
-                                
                                 <a href="{{ route('reporte.diario', ['formato' => 'csv']) }}" 
-                                   class="flex items-center px-6 py-4 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors duration-200">
-                                    <div class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4">
-                                        <!-- Icono Heroicon para CSV/Excel -->
-                                        <svg class="w-7 h-7 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                   class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition duration-150">
+                                    <div class="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                         </svg>
                                     </div>
                                     <div class="flex-1">
-                                        <div class="font-semibold text-gray-900 text-base">Descargar CSV</div>
-                                        <div class="text-sm text-gray-500">Datos para análisis en Excel/hojas de cálculo</div>
-                                    </div>
-                                    <div class="text-xs text-gray-400">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                        </svg>
+                                        <div class="font-semibold text-gray-900">Descargar CSV</div>
+                                        <div class="text-xs text-gray-500">Datos para análisis en Excel</div>
                                     </div>
                                 </a>
                             </div>
@@ -503,140 +485,136 @@
     </div>
 </div>
 
-
 <script>
-// Función elegante para el dropdown flotante
-function toggleReporteDropdown() {
-    const button = document.getElementById('reporteButton');
-    const dropdown = document.getElementById('reporteDropdown');
+// Variable global para el estado del dropdown
+let dropdownState = {
+    isOpen: false,
+    button: null,
+    dropdown: null,
+    container: null
+};
+
+// Función principal para manejar el dropdown
+function setupReporteDropdown() {
+    console.log('🔧 Configurando dropdown de reportes...');
     
-    if (!button || !dropdown) {
-        console.error('❌ Elementos no encontrados');
-        return;
+    // Obtener elementos
+    dropdownState.button = document.getElementById('reporteButton');
+    dropdownState.dropdown = document.getElementById('reporteDropdown');
+    dropdownState.container = document.getElementById('reporteDropdownContainer');
+    
+    if (!dropdownState.button || !dropdownState.dropdown) {
+        console.error('❌ Elementos del dropdown no encontrados');
+        return false;
     }
     
-    const isHidden = dropdown.classList.contains('hidden');
+    console.log('✅ Elementos encontrados');
     
-    if (isHidden) {
-        // Mostrar dropdown
-        showFloatingDropdown(button, dropdown);
+    // Limpiar eventos anteriores si existen
+    cleanupEvents();
+    
+    // Configurar evento del botón
+    dropdownState.button.addEventListener('click', handleButtonClick);
+    
+    // Configurar cierre con click fuera
+    document.addEventListener('click', handleOutsideClick);
+    
+    // Configurar cierre con Escape
+    document.addEventListener('keydown', handleEscapeKey);
+    
+    // Configurar enlaces del dropdown
+    const links = dropdownState.dropdown.querySelectorAll('a');
+    links.forEach(link => {
+        link.addEventListener('click', handleLinkClick);
+    });
+    
+    // Funciones globales para debug
+    window.openDropdown = () => showDropdown();
+    window.closeDropdown = () => hideDropdown();
+    window.toggleDropdown = () => toggleDropdown();
+    
+    console.log('✅ Dropdown configurado correctamente');
+    return true;
+}
+
+// Función para limpiar eventos anteriores
+function cleanupEvents() {
+    if (dropdownState.button) {
+        dropdownState.button.removeEventListener('click', handleButtonClick);
+    }
+    document.removeEventListener('click', handleOutsideClick);
+    document.removeEventListener('keydown', handleEscapeKey);
+}
+
+// Manejar clic en el botón
+function handleButtonClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('�️ Clic en botón de reporte');
+    toggleDropdown();
+}
+
+// Manejar clic fuera del dropdown
+function handleOutsideClick(e) {
+    if (dropdownState.isOpen && 
+        dropdownState.container && 
+        !dropdownState.container.contains(e.target)) {
+        console.log('👆 Clic fuera del dropdown');
+        hideDropdown();
+    }
+}
+
+// Manejar tecla Escape
+function handleEscapeKey(e) {
+    if (e.key === 'Escape' && dropdownState.isOpen) {
+        console.log('⌨️ Tecla Escape presionada');
+        hideDropdown();
+    }
+}
+
+// Manejar clic en enlaces
+function handleLinkClick() {
+    console.log('📄 Clic en enlace de descarga');
+    hideDropdown();
+}
+
+// Mostrar dropdown
+function showDropdown() {
+    if (dropdownState.dropdown) {
+        dropdownState.dropdown.classList.remove('hidden');
+        dropdownState.isOpen = true;
+        console.log('� Dropdown mostrado');
+    }
+}
+
+// Ocultar dropdown
+function hideDropdown() {
+    if (dropdownState.dropdown) {
+        dropdownState.dropdown.classList.add('hidden');
+        dropdownState.isOpen = false;
+        console.log('📁 Dropdown oculto');
+    }
+}
+
+// Alternar dropdown
+function toggleDropdown() {
+    if (dropdownState.isOpen) {
+        hideDropdown();
     } else {
-        // Ocultar dropdown
-        hideFloatingDropdown(dropdown);
+        showDropdown();
     }
 }
 
-// Función para mostrar el dropdown flotante debajo del botón
-function showFloatingDropdown(button, dropdown) {
-    // Obtener posición del botón
-    const buttonRect = button.getBoundingClientRect();
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-    
-    // Calcular posición
-    const top = buttonRect.bottom + scrollTop + 8; // 8px de margen
-    const left = buttonRect.left + scrollLeft;
-    
-    // Asegurar que no se salga de la ventana
-    const viewportWidth = window.innerWidth;
-    const dropdownWidth = 320; // Ancho mínimo definido
-    
-    let finalLeft = left;
-    if (left + dropdownWidth > viewportWidth - 20) {
-        // Si se sale por la derecha, alinear a la derecha del botón
-        finalLeft = buttonRect.right + scrollLeft - dropdownWidth;
+// Inicializar múltiples veces para asegurar funcionamiento
+document.addEventListener('DOMContentLoaded', setupReporteDropdown);
+window.addEventListener('load', setupReporteDropdown);
+
+// Reintentar si no funciona la primera vez
+setTimeout(() => {
+    if (!dropdownState.button) {
+        console.log('🔄 Reintentando configuración del dropdown...');
+        setupReporteDropdown();
     }
-    
-    // Aplicar posición ANTES de mostrar
-    dropdown.style.position = 'fixed';
-    dropdown.style.top = top + 'px';
-    dropdown.style.left = Math.max(10, finalLeft) + 'px'; // Mínimo 10px del borde
-    dropdown.style.zIndex = '999999';
-    dropdown.style.display = 'block';
-    dropdown.style.visibility = 'visible';
-    
-    // Mostrar inmediatamente sin clase hidden
-    dropdown.classList.remove('hidden');
-    
-    // Preparar animación
-    dropdown.style.opacity = '0';
-    dropdown.style.transform = 'translateY(-10px) scale(0.95)';
-    dropdown.style.transition = 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
-    
-    // Forzar reflow para que los estilos se apliquen
-    dropdown.offsetHeight;
-    
-    // Animar entrada
-    requestAnimationFrame(() => {
-        dropdown.style.opacity = '1';
-        dropdown.style.transform = 'translateY(0) scale(1)';
-    });
-    
-    console.log('📂 Dropdown flotante mostrado en:', { top, left: finalLeft });
-}
-
-// Función para ocultar el dropdown
-function hideFloatingDropdown(dropdown) {
-    // Animar salida
-    dropdown.style.opacity = '0';
-    dropdown.style.transform = 'translateY(-10px) scale(0.95)';
-    
-    // Ocultar después de la animación
-    setTimeout(() => {
-        dropdown.classList.add('hidden');
-        dropdown.style.display = 'none';
-        dropdown.style.visibility = 'hidden';
-        dropdown.style.transform = '';
-        dropdown.style.transition = '';
-    }, 200);
-    
-    console.log('📁 Dropdown flotante ocultado');
-}
-
-// Eventos del DOM
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Sistema de dropdown flotante cargado');
-    
-    // Cerrar con clic fuera
-    document.addEventListener('click', function(e) {
-        const button = document.getElementById('reporteButton');
-        const dropdown = document.getElementById('reporteDropdown');
-        
-        if (dropdown && !dropdown.classList.contains('hidden')) {
-            // Si se hace clic fuera del botón y del dropdown
-            if (!button.contains(e.target) && !dropdown.contains(e.target)) {
-                hideFloatingDropdown(dropdown);
-            }
-        }
-    });
-    
-    // Cerrar con Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            const dropdown = document.getElementById('reporteDropdown');
-            if (dropdown && !dropdown.classList.contains('hidden')) {
-                hideFloatingDropdown(dropdown);
-            }
-        }
-    });
-    
-    // Reposicionar al cambiar tamaño de ventana
-    window.addEventListener('resize', function() {
-        const button = document.getElementById('reporteButton');
-        const dropdown = document.getElementById('reporteDropdown');
-        
-        if (dropdown && !dropdown.classList.contains('hidden')) {
-            showFloatingDropdown(button, dropdown);
-        }
-    });
-    
-    // Cerrar al hacer scroll
-    window.addEventListener('scroll', function() {
-        const dropdown = document.getElementById('reporteDropdown');
-        if (dropdown && !dropdown.classList.contains('hidden')) {
-            hideFloatingDropdown(dropdown);
-        }
-    });
-});
+}, 500);
 </script>
 @endsection
