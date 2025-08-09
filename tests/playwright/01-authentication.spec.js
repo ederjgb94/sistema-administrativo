@@ -5,7 +5,7 @@ import { test, expect } from '@playwright/test';
  * Pruebas exhaustivas del sistema de autenticación
  */
 
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL = 'http://127.0.0.1:8001';
 const LOGIN_EMAIL = 'admin@admin.com';
 const LOGIN_PASSWORD = 'admin';
 

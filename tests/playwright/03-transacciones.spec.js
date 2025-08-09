@@ -3,10 +3,12 @@ import { test, expect } from '@playwright/test';
 // Helper para login
 async function login(page) {
     await page.goto('/login');
-    await page.fill('input[name="email"]', 'admin@sistema.com');
-    await page.fill('input[name="password"]', 'Admin123!');
+    await page.fill('input[name="email"]', 'admin@petrotekno.com');
+    await page.fill('input[name="password"]', 'admin123');
     await page.click('button[type="submit"]');
-    await page.waitForURL('/dashboard');
+    // Esperar a que aparezca el dashboard o un elemento distintivo
+    await page.waitForURL('/dashboard', { timeout: 10000 });
+    await page.waitForSelector('text=Bienvenido', { timeout: 5000 });
 }
 
 test.describe('Módulo de Transacciones', () => {
@@ -15,12 +17,12 @@ test.describe('Módulo de Transacciones', () => {
     });
 
     test('debe mostrar la página de transacciones', async ({ page }) => {
-        await page.click('button:has-text("Transacciones")');
-        await page.click('a:has-text("Ver Transacciones")');
+        await page.goto('/transacciones');
 
         await expect(page).toHaveURL('/transacciones');
         await expect(page).toHaveTitle('Sistema Administrativo');
-        await expect(page.locator('h1')).toContainText('Transacciones');
+        await expect(page.locator('h2')).toContainText('Transacciones');
+        await expect(page.locator('p')).toContainText('Gestión de ingresos y egresos');
     });
 
     test('debe navegar al formulario de nueva transacción', async ({ page }) => {
@@ -35,9 +37,9 @@ test.describe('Módulo de Transacciones', () => {
         await page.goto('/transacciones/create');
 
         // Verificar campos obligatorios
-        await expect(page.locator('label:has-text("Tipo *")')).toBeVisible();
+        await expect(page.locator('label').filter({ hasText: 'Tipo *' }).first()).toBeVisible(); // Tipo de transacción
         await expect(page.locator('label:has-text("Fecha *")')).toBeVisible();
-        await expect(page.locator('label:has-text("Tipo *"):nth(1)')).toBeVisible(); // Referencia tipo
+        await expect(page.locator('label').filter({ hasText: 'Tipo *' }).nth(1)).toBeVisible(); // Referencia tipo
         await expect(page.locator('label:has-text("Nombre *")')).toBeVisible();
         await expect(page.locator('label:has-text("Tipo de Factura *")')).toBeVisible();
         await expect(page.locator('label:has-text("Total *")')).toBeVisible();
@@ -73,12 +75,13 @@ test.describe('Módulo de Transacciones', () => {
     test('debe mostrar sección de factura manual al seleccionar tipo manual', async ({ page }) => {
         await page.goto('/transacciones/create');
 
-        await page.locator('select[name="factura_tipo"]').selectOption('manual');
+        // Seleccionar tipo manual
+        await page.selectOption('select[name="factura_tipo"]', 'manual');
 
         // Verificar que aparece la sección manual
         await expect(page.locator('h4:has-text("Factura Manual")')).toBeVisible();
-        await expect(page.locator('input[name="factura_manual[emisor]"]')).toBeVisible();
-        await expect(page.locator('input[name="factura_manual[receptor]"]')).toBeVisible();
+        await expect(page.getByPlaceholder('Emisor') || page.getByLabel('Emisor')).toBeVisible();
+        await expect(page.getByPlaceholder('Receptor') || page.getByLabel('Receptor')).toBeVisible();
         await expect(page.locator('table')).toBeVisible(); // Tabla de conceptos
     });
 

@@ -36,7 +36,7 @@ class AuthenticationTest extends TestCase
 
         // Verificar redirección al dashboard
         $response->assertRedirect('/dashboard');
-        
+
         // Verificar que el usuario está autenticado
         $this->assertAuthenticatedAs($user);
     }
@@ -54,7 +54,7 @@ class AuthenticationTest extends TestCase
 
         // Verificar que hay errores de validación
         $response->assertSessionHasErrors();
-        
+
         // Verificar que no hay usuario autenticado
         $this->assertGuest();
     }
@@ -81,7 +81,7 @@ class AuthenticationTest extends TestCase
 
         // Verificar redirección a home
         $response->assertRedirect('/');
-        
+
         // Verificar que ya no está autenticado
         $this->assertGuest();
     }
@@ -117,7 +117,7 @@ class AuthenticationTest extends TestCase
 
         // Verificar respuesta exitosa
         $response->assertOk();
-        
+
         // Verificar contenido del dashboard
         $response->assertSee('Dashboard');
         $response->assertSee('Bienvenido, Dashboard User');
