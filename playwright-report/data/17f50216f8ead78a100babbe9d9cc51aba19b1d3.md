@@ -1,0 +1,120 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - link "Sistema Admin":
+    - /url: http://127.0.0.1:8001/dashboard
+    - img
+    - text: Sistema Admin
+  - link "Dashboard":
+    - /url: http://127.0.0.1:8001/dashboard
+    - img
+    - text: Dashboard
+  - button "Contactos":
+    - img
+    - text: Contactos
+    - img
+  - button "Transacciones":
+    - img
+    - text: Transacciones
+    - img
+  - link "Reportes":
+    - /url: "#"
+    - img
+    - text: Reportes
+  - button:
+    - img
+  - button "A Admin":
+    - text: A Admin
+    - img
+- main:
+  - heading "Dashboard" [level=1]
+  - paragraph: Bienvenido de vuelta, Admin
+  - img
+  - paragraph: Ingresos
+  - paragraph: $0
+  - img
+  - paragraph: Egresos
+  - paragraph: $0
+  - img
+  - paragraph: Balance
+  - paragraph: +$0
+  - heading "Acciones Rápidas" [level=3]
+  - link "Nueva Transacción Registrar ingreso o egreso":
+    - /url: http://127.0.0.1:8001/transacciones/create
+    - img
+    - heading "Nueva Transacción" [level=3]
+    - paragraph: Registrar ingreso o egreso
+  - link "Nuevo Contacto Agregar cliente o proveedor":
+    - /url: http://127.0.0.1:8001/contactos/create
+    - img
+    - heading "Nuevo Contacto" [level=3]
+    - paragraph: Agregar cliente o proveedor
+  - link "Ver Transacciones Gestión de ingresos y egresos":
+    - /url: http://127.0.0.1:8001/transacciones
+    - img
+    - heading "Ver Transacciones" [level=3]
+    - paragraph: Gestión de ingresos y egresos
+  - button "Reporte Diario Descargar resumen del día":
+    - img
+    - heading "Reporte Diario" [level=3]
+    - paragraph: Descargar resumen del día
+  - heading "Seleccionar formato" [level=3]
+  - paragraph: Elige el formato para descargar
+  - link "� Descargar PDF Reporte profesional con formato imprimible":
+    - /url: http://127.0.0.1:8001/reporte-diario?formato=pdf
+    - img
+    - text: � Descargar PDF Reporte profesional con formato imprimible
+    - img
+  - link "📊 Descargar CSV Datos para análisis en Excel/hojas de cálculo":
+    - /url: http://127.0.0.1:8001/reporte-diario?formato=csv
+    - img
+    - text: 📊 Descargar CSV Datos para análisis en Excel/hojas de cálculo
+    - img
+  - img
+  - term: Total Contactos
+  - definition: "8"
+  - img
+  - term: Clientes
+  - definition: "5"
+  - img
+  - term: Proveedores
+  - definition: "5"
+  - img
+  - term: Transacciones del Mes
+  - definition: "3"
+  - heading "Transacciones Recientes" [level=3]
+  - paragraph: ING-001
+  - paragraph: Juan Pérez García
+  - paragraph: +$75,400.00
+  - paragraph: 04/08/2025
+  - paragraph: ING-002
+  - paragraph: Empresa Tech Solutions
+  - paragraph: +$8,004.00
+  - paragraph: 30/07/2025
+  - paragraph: EGR-001
+  - paragraph: Constructora ABC S.A. de C.V.
+  - paragraph: "-$15,138.00"
+  - paragraph: 06/08/2025
+  - paragraph: EGR-002
+  - paragraph: Ferretería El Martillo
+  - paragraph: "-$2,784.00"
+  - paragraph: 02/08/2025
+  - paragraph: EGR-003
+  - paragraph: Sin contacto
+  - paragraph: "-$2,146.00"
+  - paragraph: 25/07/2025
+  - heading "Resumen Financiero" [level=3]
+  - img
+  - paragraph: Ingresos del Mes
+  - paragraph: August 2025
+  - paragraph: $75,400.00
+  - img
+  - paragraph: Egresos del Mes
+  - paragraph: August 2025
+  - paragraph: $17,922.00
+  - img
+  - paragraph: Balance del Mes
+  - paragraph: August 2025
+  - paragraph: +$57,478.00
+```

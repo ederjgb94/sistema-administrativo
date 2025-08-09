@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\TransaccionController;
+use App\Http\Controllers\ReporteController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,6 +32,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('transacciones', TransaccionController::class);
     Route::delete('transacciones/{transaccione}/archivo/{index}', [TransaccionController::class, 'eliminarArchivo'])->name('transacciones.eliminar-archivo');
     Route::get('transacciones-export', [TransaccionController::class, 'export'])->name('transacciones.export');
+
+    // Rutas de reportes
+    Route::get('reporte-diario', [ReporteController::class, 'reporteDiario'])->name('reporte.diario');
 
     // API para autocompletado
     Route::get('api/contactos/buscar', [ContactoController::class, 'buscarApi'])->name('api.contactos.buscar');
