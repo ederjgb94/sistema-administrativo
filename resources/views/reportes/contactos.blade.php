@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte Diario - {{ $fechaFormateada }}</title>
+    <title>Reporte de Contactos - {{ $resumen['tipo'] }}</title>
     <style>
         @page {
             margin: 150px 50px 120px 50px;
@@ -43,17 +43,6 @@
             display: table-cell;
             text-align: right;
             vertical-align: middle;
-        }
-        
-        .logo-placeholder {
-            width: 150px;
-            height: 60px;
-            border: 2px dashed #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-size: 10px;
         }
         
         .fecha-reporte {
@@ -200,8 +189,8 @@
         .valor-balance { color: #2563EB; }
         .valor-balance.negativo { color: #EA580C; }
         
-        /* Tabla de transacciones */
-        .transacciones-titulo {
+        /* Tabla de contactos */
+        .contactos-titulo {
             font-size: 16px;
             font-weight: bold;
             color: #374151;
@@ -210,13 +199,13 @@
             padding-bottom: 5px;
         }
         
-        .tabla-transacciones {
+        .tabla-contactos {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
         
-        .tabla-transacciones th {
+        .tabla-contactos th {
             background-color: #F3F4F6;
             border: 1px solid #D1D5DB;
             padding: 10px 8px;
@@ -226,13 +215,13 @@
             color: #374151;
         }
         
-        .tabla-transacciones td {
+        .tabla-contactos td {
             border: 1px solid #E5E7EB;
             padding: 8px;
             font-size: 10px;
         }
         
-        .tabla-transacciones tr:nth-child(even) {
+        .tabla-contactos tr:nth-child(even) {
             background-color: #F9FAFB;
         }
         
@@ -251,7 +240,16 @@
             font-weight: bold;
         }
         
-        .sin-transacciones {
+        .estado-activo {
+            color: #059669;
+            font-weight: bold;
+        }
+        
+        .estado-inactivo {
+            color: #6B7280;
+        }
+        
+        .sin-contactos {
             text-align: center;
             color: #6B7280;
             font-style: italic;
@@ -280,17 +278,15 @@
             $pdf->text($x, $y, $text, $font, $size);
         }
     </script>
+    
     <!-- Header -->
     <div class="header">
         <div class="header-content">
             <div class="header-left">
-                <!-- Espacio para logo - se deja vacío si no hay logo -->
-                <div class="logo-placeholder" style="display: none;">
-                    Logo
-                </div>
+                <!-- Espacio para logo -->
             </div>
             <div class="header-right">
-                <div class="fecha-reporte">{{ $fechaFormateada }}</div>
+                <div class="fecha-reporte">{{ $resumen['tipo'] }}</div>
                 <div class="fecha-generacion">Generado: {{ now()->format('d/m/Y H:i:s') }}</div>
             </div>
         </div>
@@ -299,91 +295,91 @@
     <!-- Footer -->
     <div class="footer">
         <div class="footer-content">
-            <div class="footer-section">
-                <!-- Dirección - se deja vacío si no hay dirección -->
+            <div class="footer-left">
+                <!-- Sistema Administrativo -->
             </div>
-            <div class="footer-section footer-center">
+            <div class="footer-center">
                 <!-- Numeración de páginas HTML + CSS -->
                 <div class="page-number">
                     <span class="pagenum"></span> de {{ isset($totalPaginas) ? $totalPaginas : 1 }}
                 </div>
             </div>
-            <div class="footer-section footer-right">
-                <!-- Correo - se deja vacío si no hay correo -->
+            <div class="footer-right">
+                <!-- Información adicional -->
             </div>
         </div>
     </div>
 
-
-
     <!-- Contenido principal -->
     <div class="main-content">
         <div class="titulo-principal">
-            REPORTE DIARIO DE TRANSACCIONES
+            REPORTE DE CONTACTOS
         </div>
 
-        <!-- Resumen -->
+        <!-- Resumen General -->
         <div class="resumen-container">
-            <div class="resumen-titulo">Resumen del Día</div>
+            <div class="resumen-titulo">Resumen General</div>
             <div class="resumen-grid">
                 <div class="resumen-item">
+                    <div class="resumen-label">Tipo de Contactos:</div>
+                    <div class="resumen-valor">{{ $resumen['tipo'] }}</div>
+                </div>
+                <div class="resumen-item">
+                    <div class="resumen-label">Total de Contactos:</div>
+                    <div class="resumen-valor">{{ $resumen['total_contactos'] }}</div>
+                </div>
+                <div class="resumen-item">
                     <div class="resumen-label">Total de Ingresos:</div>
-                    <div class="resumen-valor valor-ingreso">${{ number_format($totalIngresos, 2) }}</div>
+                    <div class="resumen-valor valor-ingreso">${{ number_format($resumen['total_ingresos'], 2) }}</div>
                 </div>
                 <div class="resumen-item">
                     <div class="resumen-label">Total de Egresos:</div>
-                    <div class="resumen-valor valor-egreso">${{ number_format($totalEgresos, 2) }}</div>
-                </div>
-                <div class="resumen-item">
-                    <div class="resumen-label">Balance del Día:</div>
-                    <div class="resumen-valor valor-balance {{ $balance < 0 ? 'negativo' : '' }}">
-                        {{ $balance >= 0 ? '+' : '' }}${{ number_format($balance, 2) }}
-                    </div>
+                    <div class="resumen-valor valor-egreso">${{ number_format($resumen['total_egresos'], 2) }}</div>
                 </div>
                 <div class="resumen-item">
                     <div class="resumen-label">Total de Transacciones:</div>
-                    <div class="resumen-valor">{{ $transacciones->count() }}</div>
+                    <div class="resumen-valor">{{ $resumen['total_transacciones'] }}</div>
                 </div>
             </div>
         </div>
 
-        <!-- Detalle de transacciones -->
-        <div class="transacciones-titulo">Detalle de Transacciones</div>
+        <!-- Detalle de contactos -->
+        <div class="contactos-titulo">Detalle por Contacto</div>
         
-        @if($transacciones->count() > 0)
-            <table class="tabla-transacciones">
+        @if($contactos->count() > 0)
+            <table class="tabla-contactos">
                 <thead>
                     <tr>
-                        <th style="width: 12%;">Folio</th>
+                        <th style="width: 20%;">Nombre</th>
                         <th style="width: 10%;">Tipo</th>
-                        <th style="width: 20%;">Contacto</th>
-                        <th style="width: 25%;">Descripción</th>
-                        <th style="width: 15%;">Método Pago</th>
-                        <th style="width: 12%;">Monto</th>
-                        <th style="width: 6%;">Hora</th>
+                        <th style="width: 15%;">Email</th>
+                        <th style="width: 12%;">Teléfono</th>
+                        <th style="width: 12%;">Ingresos</th>
+                        <th style="width: 12%;">Egresos</th>
+                        <th style="width: 12%;">Balance</th>
+                        <th style="width: 7%;">Trans.</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($transacciones as $transaccion)
+                    @foreach($contactos as $contacto)
                     <tr>
-                        <td>{{ $transaccion->folio }}</td>
-                        <td class="{{ $transaccion->tipo === 'ingreso' ? 'tipo-ingreso' : 'tipo-egreso' }}">
-                            {{ ucfirst($transaccion->tipo) }}
+                        <td style="font-weight: bold;">{{ $contacto->nombre }}</td>
+                        <td>{{ ucfirst($contacto->tipo) }}</td>
+                        <td style="font-size: 9px;">{{ $contacto->email ?: '-' }}</td>
+                        <td>{{ $contacto->telefono ?: '-' }}</td>
+                        <td class="monto tipo-ingreso">${{ number_format($contacto->reporte_ingresos, 2) }}</td>
+                        <td class="monto tipo-egreso">${{ number_format($contacto->reporte_egresos, 2) }}</td>
+                        <td class="monto {{ $contacto->reporte_balance >= 0 ? 'tipo-ingreso' : 'tipo-egreso' }}">
+                            {{ $contacto->reporte_balance >= 0 ? '+' : '' }}${{ number_format($contacto->reporte_balance, 2) }}
                         </td>
-                        <td>{{ $transaccion->contacto->nombre ?? 'Sin contacto' }}</td>
-                        <td>{{ $transaccion->descripcion ?: 'Sin descripción' }}</td>
-                        <td>{{ $transaccion->metodoPago->nombre ?? 'Sin método' }}</td>
-                        <td class="monto {{ $transaccion->tipo === 'ingreso' ? 'tipo-ingreso' : 'tipo-egreso' }}">
-                            ${{ number_format($transaccion->total, 2) }}
-                        </td>
-                        <td>{{ $transaccion->created_at->format('H:i') }}</td>
+                        <td style="text-align: center;">{{ $contacto->reporte_total_transacciones }}</td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
         @else
-            <div class="sin-transacciones">
-                No se registraron transacciones en esta fecha
+            <div class="sin-contactos">
+                No se encontraron contactos con transacciones
             </div>
         @endif
     </div>
