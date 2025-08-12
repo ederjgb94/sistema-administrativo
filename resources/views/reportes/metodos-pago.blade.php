@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte Diario - {{ $fechaFormateada }}</title>
+    <title>Reporte de Métodos de Pago</title>
     <style>
         @page {
             margin: 150px 50px 120px 50px;
@@ -43,17 +43,6 @@
             display: table-cell;
             text-align: right;
             vertical-align: middle;
-        }
-        
-        .logo-placeholder {
-            width: 150px;
-            height: 60px;
-            border: 2px dashed #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-size: 10px;
         }
         
         .fecha-reporte {
@@ -197,11 +186,10 @@
         
         .valor-ingreso { color: #059669; }
         .valor-egreso { color: #DC2626; }
-        .valor-balance { color: #2563EB; }
-        .valor-balance.negativo { color: #EA580C; }
+        .valor-total { color: #2563EB; }
         
-        /* Tabla de transacciones */
-        .transacciones-titulo {
+        /* Tabla de métodos de pago */
+        .metodos-titulo {
             font-size: 16px;
             font-weight: bold;
             color: #374151;
@@ -210,13 +198,13 @@
             padding-bottom: 5px;
         }
         
-        .tabla-transacciones {
+        .tabla-metodos {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
         
-        .tabla-transacciones th {
+        .tabla-metodos th {
             background-color: #F3F4F6;
             border: 1px solid #D1D5DB;
             padding: 10px 8px;
@@ -226,13 +214,13 @@
             color: #374151;
         }
         
-        .tabla-transacciones td {
+        .tabla-metodos td {
             border: 1px solid #E5E7EB;
             padding: 8px;
             font-size: 10px;
         }
         
-        .tabla-transacciones tr:nth-child(even) {
+        .tabla-metodos tr:nth-child(even) {
             background-color: #F9FAFB;
         }
         
@@ -246,18 +234,72 @@
             font-weight: bold;
         }
         
+        .tipo-total {
+            color: #2563EB;
+            font-weight: bold;
+        }
+        
         .monto {
             text-align: right;
             font-weight: bold;
         }
         
-        .sin-transacciones {
+        .estado-activo {
+            color: #059669;
+            font-weight: bold;
+        }
+        
+        .estado-inactivo {
+            color: #6B7280;
+        }
+        
+        .sin-metodos {
             text-align: center;
             color: #6B7280;
             font-style: italic;
             padding: 40px 0;
             background-color: #F9FAFB;
             border-radius: 8px;
+        }
+        
+        /* Gráfico de barras simple */
+        .grafico-container {
+            margin-bottom: 30px;
+        }
+        
+        .barra-metodo {
+            display: table;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .barra-label {
+            display: table-cell;
+            width: 30%;
+            padding: 5px;
+            font-weight: bold;
+            font-size: 10px;
+        }
+        
+        .barra-visual {
+            display: table-cell;
+            width: 50%;
+            padding: 5px;
+        }
+        
+        .barra-fill {
+            height: 15px;
+            background-color: #3B82F6;
+            border-radius: 3px;
+        }
+        
+        .barra-valor {
+            display: table-cell;
+            width: 20%;
+            padding: 5px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 10px;
         }
     </style>
 </head>
@@ -270,27 +312,21 @@
             $y = 20;
             $x = 300;
             
-            // Usar el total estimado del controlador con fallback seguro
-            $totalPaginas = isset($totalPaginas) ? $totalPaginas : 1;
-            if ($PAGE_COUNT > 0) {
-                $totalPaginas = $PAGE_COUNT;
-            }
-            $text = $PAGE_NUM . " de " . $totalPaginas;
+            // Forzar el total de páginas a 2 
+            $text = $PAGE_NUM . " de 2";
             
             $pdf->text($x, $y, $text, $font, $size);
         }
     </script>
+    
     <!-- Header -->
     <div class="header">
         <div class="header-content">
             <div class="header-left">
-                <!-- Espacio para logo - se deja vacío si no hay logo -->
-                <div class="logo-placeholder" style="display: none;">
-                    Logo
-                </div>
+                <!-- Espacio para logo -->
             </div>
             <div class="header-right">
-                <div class="fecha-reporte">{{ $fechaFormateada }}</div>
+                <div class="fecha-reporte">Métodos de Pago</div>
                 <div class="fecha-generacion">Generado: {{ now()->format('d/m/Y H:i:s') }}</div>
             </div>
         </div>
@@ -299,91 +335,109 @@
     <!-- Footer -->
     <div class="footer">
         <div class="footer-content">
-            <div class="footer-section">
-                <!-- Dirección - se deja vacío si no hay dirección -->
+            <div class="footer-left">
+                <!-- Sistema Administrativo -->
             </div>
-            <div class="footer-section footer-center">
+            <div class="footer-center">
                 <!-- Numeración de páginas HTML + CSS -->
                 <div class="page-number">
-                    <span class="pagenum"></span> de {{ isset($totalPaginas) ? $totalPaginas : 1 }}
+                    <span class="pagenum"></span> de 2
                 </div>
             </div>
-            <div class="footer-section footer-right">
-                <!-- Correo - se deja vacío si no hay correo -->
+            <div class="footer-right">
+                <!-- Información adicional -->
             </div>
         </div>
     </div>
 
-
-
     <!-- Contenido principal -->
     <div class="main-content">
         <div class="titulo-principal">
-            REPORTE DIARIO DE TRANSACCIONES
+            REPORTE DE MÉTODOS DE PAGO
         </div>
 
-        <!-- Resumen -->
+        <!-- Resumen General -->
         <div class="resumen-container">
-            <div class="resumen-titulo">Resumen del Día</div>
+            <div class="resumen-titulo">Resumen General</div>
             <div class="resumen-grid">
                 <div class="resumen-item">
+                    <div class="resumen-label">Total de Métodos:</div>
+                    <div class="resumen-valor">{{ $resumen['total_metodos'] }}</div>
+                </div>
+                <div class="resumen-item">
                     <div class="resumen-label">Total de Ingresos:</div>
-                    <div class="resumen-valor valor-ingreso">${{ number_format($totalIngresos, 2) }}</div>
+                    <div class="resumen-valor valor-ingreso">${{ number_format($resumen['total_ingresos'], 2) }}</div>
                 </div>
                 <div class="resumen-item">
                     <div class="resumen-label">Total de Egresos:</div>
-                    <div class="resumen-valor valor-egreso">${{ number_format($totalEgresos, 2) }}</div>
+                    <div class="resumen-valor valor-egreso">${{ number_format($resumen['total_egresos'], 2) }}</div>
                 </div>
                 <div class="resumen-item">
-                    <div class="resumen-label">Balance del Día:</div>
-                    <div class="resumen-valor valor-balance {{ $balance < 0 ? 'negativo' : '' }}">
-                        {{ $balance >= 0 ? '+' : '' }}${{ number_format($balance, 2) }}
-                    </div>
+                    <div class="resumen-label">Volumen Total:</div>
+                    <div class="resumen-valor valor-total">${{ number_format($resumen['total_ingresos'] + $resumen['total_egresos'], 2) }}</div>
                 </div>
                 <div class="resumen-item">
                     <div class="resumen-label">Total de Transacciones:</div>
-                    <div class="resumen-valor">{{ $transacciones->count() }}</div>
+                    <div class="resumen-valor">{{ $resumen['total_transacciones'] }}</div>
                 </div>
             </div>
         </div>
 
-        <!-- Detalle de transacciones -->
-        <div class="transacciones-titulo">Detalle de Transacciones</div>
+        <!-- Gráfico Visual de Uso -->
+        @if($metodosPago->count() > 0)
+        @php
+            $maxVolumen = $metodosPago->max('reporte_total');
+        @endphp
+        <div class="grafico-container">
+            <div class="resumen-titulo">Volumen por Método de Pago</div>
+            @foreach($metodosPago->take(10) as $metodo)
+            @php
+                $porcentaje = $maxVolumen > 0 ? ($metodo->reporte_total / $maxVolumen) * 100 : 0;
+            @endphp
+            <div class="barra-metodo">
+                <div class="barra-label">{{ $metodo->nombre }}</div>
+                <div class="barra-visual">
+                    <div class="barra-fill" style="width: {{ $porcentaje }}%;"></div>
+                </div>
+                <div class="barra-valor">${{ number_format($metodo->reporte_total, 0) }}</div>
+            </div>
+            @endforeach
+        </div>
+        @endif
+
+        <!-- Detalle de métodos de pago -->
+        <div class="metodos-titulo">Detalle por Método de Pago</div>
         
-        @if($transacciones->count() > 0)
-            <table class="tabla-transacciones">
+        @if($metodosPago->count() > 0)
+            <table class="tabla-metodos">
                 <thead>
                     <tr>
-                        <th style="width: 12%;">Folio</th>
-                        <th style="width: 10%;">Tipo</th>
-                        <th style="width: 20%;">Contacto</th>
-                        <th style="width: 25%;">Descripción</th>
-                        <th style="width: 15%;">Método Pago</th>
-                        <th style="width: 12%;">Monto</th>
-                        <th style="width: 6%;">Hora</th>
+                        <th style="width: 25%;">Método de Pago</th>
+                        <th style="width: 18%;">Total Ingresos</th>
+                        <th style="width: 18%;">Total Egresos</th>
+                        <th style="width: 18%;">Volumen Total</th>
+                        <th style="width: 12%;">Transacciones</th>
+                        <th style="width: 9%;">Estado</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($transacciones as $transaccion)
+                    @foreach($metodosPago as $metodo)
                     <tr>
-                        <td>{{ $transaccion->folio }}</td>
-                        <td class="{{ $transaccion->tipo === 'ingreso' ? 'tipo-ingreso' : 'tipo-egreso' }}">
-                            {{ ucfirst($transaccion->tipo) }}
+                        <td style="font-weight: bold;">{{ $metodo->nombre }}</td>
+                        <td class="monto tipo-ingreso">${{ number_format($metodo->reporte_ingresos, 2) }}</td>
+                        <td class="monto tipo-egreso">${{ number_format($metodo->reporte_egresos, 2) }}</td>
+                        <td class="monto tipo-total">${{ number_format($metodo->reporte_total, 2) }}</td>
+                        <td style="text-align: center;">{{ $metodo->reporte_total_transacciones }}</td>
+                        <td class="{{ $metodo->activo ? 'estado-activo' : 'estado-inactivo' }}">
+                            {{ $metodo->activo ? 'Activo' : 'Inactivo' }}
                         </td>
-                        <td>{{ $transaccion->contacto->nombre ?? 'Sin contacto' }}</td>
-                        <td>{{ $transaccion->descripcion ?: 'Sin descripción' }}</td>
-                        <td>{{ $transaccion->metodoPago->nombre ?? 'Sin método' }}</td>
-                        <td class="monto {{ $transaccion->tipo === 'ingreso' ? 'tipo-ingreso' : 'tipo-egreso' }}">
-                            ${{ number_format($transaccion->total, 2) }}
-                        </td>
-                        <td>{{ $transaccion->created_at->format('H:i') }}</td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
         @else
-            <div class="sin-transacciones">
-                No se registraron transacciones en esta fecha
+            <div class="sin-metodos">
+                No se encontraron métodos de pago con transacciones
             </div>
         @endif
     </div>

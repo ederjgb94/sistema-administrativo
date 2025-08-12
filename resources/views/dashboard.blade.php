@@ -24,6 +24,11 @@
                             $balanceHoy = $ingresosHoy - $egresosHoy;
                         @endphp
                         
+                        <!-- Etiqueta "Hoy" -->
+                        <div class="text-sm text-gray-500 italic font-medium mr-2">
+                            Hoy:
+                        </div>
+                        
                         <!-- Ingresos compacto -->
                         <div class="flex items-center space-x-2 bg-green-50 px-3 py-2 rounded-lg border border-green-100">
                             <div class="w-6 h-6 bg-green-500 rounded-md flex items-center justify-center">
@@ -73,6 +78,11 @@
                 
                 <!-- Versión móvil condensada -->
                 <div class="lg:hidden mt-4 pt-4 border-t border-gray-100">
+                    <!-- Etiqueta "Hoy" centrada -->
+                    <div class="text-center mb-3">
+                        <span class="text-sm text-gray-500 italic font-medium">Hoy</span>
+                    </div>
+                    
                     <div class="flex items-center justify-center space-x-6">
                         <!-- Ingresos móvil -->
                         <div class="text-center">
