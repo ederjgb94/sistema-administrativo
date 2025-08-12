@@ -7,6 +7,9 @@ use App\Models\Contacto;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ContactoController extends Controller
 {
@@ -182,5 +185,119 @@ class ContactoController extends Controller
             });
 
         return response()->json($contactos);
+    }
+
+    /**
+     * Exportar contactos como PDF
+     */
+    public function export(Request $request)
+    {
+        try {
+            Log::info('=== INICIO EXPORT PDF CONTACTOS ===', [
+                'user_id' => Auth::id(),
+                'filtros' => $request->all(),
+                'url' => $request->fullUrl()
+            ]);
+
+            // Usamos el mismo query builder que para el index pero sin paginación
+            $query = Contacto::query();
+
+            // Filtro por tipo
+            if ($request->filled('tipo') && $request->tipo !== 'todos') {
+                Log::info('Aplicando filtro de tipo', ['tipo' => $request->tipo]);
+                $query->where('tipo', $request->tipo);
+            }
+
+            // Filtro por estado (activo/inactivo)
+            if ($request->filled('estado')) {
+                $activo = $request->estado === 'activo';
+                Log::info('Aplicando filtro de estado', ['activo' => $activo]);
+                $query->where('activo', $activo);
+            }
+
+            // Búsqueda por nombre, email o teléfono
+            if ($request->filled('search')) {
+                $search = $request->search;
+                Log::info('Aplicando filtro de búsqueda', ['search' => $search]);
+                $query->where(function ($q) use ($search) {
+                    $q->where('nombre', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('telefono', 'like', "%{$search}%")
+                        ->orWhere('rfc', 'like', "%{$search}%");
+                });
+            }
+
+            // Ordenamiento
+            $sortBy = $request->get('sort_by', 'nombre');
+            $sortDirection = $request->get('sort_direction', 'asc');
+            $query->orderBy($sortBy, $sortDirection);
+
+            // Obtener todos los contactos (sin paginación para PDF)
+            $contactos = $query->get();
+
+            Log::info('Contactos obtenidos para PDF', [
+                'count' => $contactos->count(),
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+
+            // Estadísticas para el PDF
+            $stats = [
+                'total' => $contactos->count(),
+                'clientes' => $contactos->where('tipo', 'cliente')->count(),
+                'proveedores' => $contactos->where('tipo', 'proveedor')->count(),
+                'ambos' => $contactos->where('tipo', 'ambos')->count(),
+                'activos' => $contactos->where('activo', true)->count(),
+                'inactivos' => $contactos->where('activo', false)->count(),
+            ];
+
+            // Preparar datos para la vista
+            $data = [
+                'contactos' => $contactos,
+                'stats' => $stats,
+                'filtros' => $request->all(),
+                'fecha_generacion' => now()->format('d/m/Y H:i'),
+            ];
+
+            Log::info('Generando PDF de contactos...');
+
+            // Generar el PDF con la vista
+            $pdf = Pdf::loadView('contactos.export-pdf', $data);
+
+            // Configuración básica
+            $pdf->setPaper('a4');
+
+            // Configurar opciones de DomPDF
+            $dompdf = $pdf->getDomPDF();
+            $dompdf->set_option('isPhpEnabled', true);
+            $dompdf->set_option('enable_javascript', true);
+            $dompdf->set_option('isRemoteEnabled', true);
+            $dompdf->set_option('isHtml5ParserEnabled', true);
+
+            Log::info('PDF de contactos generado exitosamente');
+
+            $filename = 'contactos_' . now()->format('Y-m-d_H-i-s') . '.pdf';
+
+            Log::info('Enviando descarga', ['filename' => $filename]);
+
+            return $pdf->download($filename);
+        } catch (\Exception $e) {
+            Log::error('=== ERROR EN EXPORT PDF CONTACTOS ===', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => substr($e->getTraceAsString(), 0, 2000)
+            ]);
+
+            // Si es una petición AJAX, devolver JSON
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'error' => true,
+                    'message' => $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
     }
 }

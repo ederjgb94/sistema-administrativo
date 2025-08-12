@@ -18,6 +18,33 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Ruta de prueba temporal para debug del PDF
+Route::get('/test-pdf', function () {
+    try {
+        $transacciones = \App\Models\Transaccion::with(['contacto', 'metodoPago'])
+            ->orderBy('fecha', 'desc')
+            ->limit(5)
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('transacciones.export-pdf', [
+            'transacciones' => $transacciones,
+            'filtros' => [],
+            'fecha_generacion' => now()->format('d/m/Y H:i'),
+            'total_registros' => $transacciones->count(),
+            'total_ingresos' => $transacciones->where('tipo', 'ingreso')->sum('total'),
+            'total_egresos' => $transacciones->where('tipo', 'egreso')->sum('total'),
+        ]);
+
+        return $pdf->download('test_transacciones.pdf');
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile()
+        ]);
+    }
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -27,7 +54,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('contactos', ContactoController::class);
     Route::patch('/contactos/{contacto}/toggle-status', [ContactoController::class, 'toggleStatus'])->name('contactos.toggle-status');
     Route::patch('/contactos/{id}/restore', [ContactoController::class, 'restore'])->name('contactos.restore');
-    Route::get('contactos-export', [ContactoController::class, 'export'])->name('contactos.export');
 
     // Rutas de transacciones
     Route::resource('transacciones', TransaccionController::class);
@@ -48,22 +74,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-
-// Ruta temporal para testing PDF sin autenticación
-Route::get('/test-transacciones-export', [App\Http\Controllers\TransaccionController::class, 'export'])->name('test.transacciones.export');
-
-// Ruta de debug temporal para PDF
-Route::get('/debug-pdf', function () {
-    try {
-        \Illuminate\Support\Facades\Log::info('Debug PDF: Iniciando...');
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML('<h1>Test Debug PDF</h1><p>Timestamp: ' . now() . '</p>');
-
-        \Illuminate\Support\Facades\Log::info('Debug PDF: PDF creado exitosamente');
-
-        return $pdf->download('debug-test.pdf');
-    } catch (\Exception $e) {
-        \Illuminate\Support\Facades\Log::error('Debug PDF Error: ' . $e->getMessage());
-        return response()->json(['error' => $e->getMessage()]);
-    }
-});
