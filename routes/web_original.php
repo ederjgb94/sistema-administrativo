@@ -27,7 +27,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('contactos', ContactoController::class);
     Route::patch('/contactos/{contacto}/toggle-status', [ContactoController::class, 'toggleStatus'])->name('contactos.toggle-status');
     Route::patch('/contactos/{id}/restore', [ContactoController::class, 'restore'])->name('contactos.restore');
-    Route::get('contactos-export', [ContactoController::class, 'export'])->name('contactos.export');
 
     // Rutas de transacciones
     Route::resource('transacciones', TransaccionController::class);
@@ -48,22 +47,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-
-// Ruta temporal para testing PDF sin autenticación
-Route::get('/test-transacciones-export', [App\Http\Controllers\TransaccionController::class, 'export'])->name('test.transacciones.export');
-
-// Ruta de debug temporal para PDF
-Route::get('/debug-pdf', function () {
-    try {
-        \Illuminate\Support\Facades\Log::info('Debug PDF: Iniciando...');
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML('<h1>Test Debug PDF</h1><p>Timestamp: ' . now() . '</p>');
-
-        \Illuminate\Support\Facades\Log::info('Debug PDF: PDF creado exitosamente');
-
-        return $pdf->download('debug-test.pdf');
-    } catch (\Exception $e) {
-        \Illuminate\Support\Facades\Log::error('Debug PDF Error: ' . $e->getMessage());
-        return response()->json(['error' => $e->getMessage()]);
-    }
-});
