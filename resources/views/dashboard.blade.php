@@ -25,40 +25,40 @@
                         @endphp
                         
                         <!-- Etiqueta "Hoy" -->
-                        <div class="text-sm text-gray-500 italic font-medium mr-2">
+                        <div class="text-base text-gray-600 italic font-semibold mr-3">
                             Hoy:
                         </div>
                         
                         <!-- Ingresos compacto -->
-                        <div class="flex items-center space-x-2 bg-green-50 px-3 py-2 rounded-lg border border-green-100">
-                            <div class="w-6 h-6 bg-green-500 rounded-md flex items-center justify-center">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex items-center space-x-3 bg-green-50 px-4 py-3 rounded-xl border border-green-100">
+                            <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs text-green-600 font-medium">Ingresos</p>
-                                <p class="text-sm font-bold text-green-700">${{ number_format($ingresosHoy, 0) }}</p>
+                                <p class="text-sm text-green-600 font-semibold">Ingresos</p>
+                                <p class="text-lg font-bold text-green-700">${{ number_format($ingresosHoy, 2) }}</p>
                             </div>
                         </div>
                         
                         <!-- Egresos compacto -->
-                        <div class="flex items-center space-x-2 bg-red-50 px-3 py-2 rounded-lg border border-red-100">
-                            <div class="w-6 h-6 bg-red-500 rounded-md flex items-center justify-center">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex items-center space-x-3 bg-red-50 px-4 py-3 rounded-xl border border-red-100">
+                            <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs text-red-600 font-medium">Egresos</p>
-                                <p class="text-sm font-bold text-red-700">${{ number_format($egresosHoy, 0) }}</p>
+                                <p class="text-sm text-red-600 font-semibold">Egresos</p>
+                                <p class="text-lg font-bold text-red-700">${{ number_format($egresosHoy, 2) }}</p>
                             </div>
                         </div>
                         
                         <!-- Balance compacto -->
-                        <div class="flex items-center space-x-2 {{ $balanceHoy >= 0 ? 'bg-blue-50 border-blue-100' : 'bg-orange-50 border-orange-100' }} px-3 py-2 rounded-lg border">
-                            <div class="w-6 h-6 {{ $balanceHoy >= 0 ? 'bg-blue-500' : 'bg-orange-500' }} rounded-md flex items-center justify-center">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex items-center space-x-3 {{ $balanceHoy >= 0 ? 'bg-blue-50 border-blue-100' : 'bg-orange-50 border-orange-100' }} px-4 py-3 rounded-xl border">
+                            <div class="w-8 h-8 {{ $balanceHoy >= 0 ? 'bg-blue-500' : 'bg-orange-500' }} rounded-lg flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     @if($balanceHoy >= 0)
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                                     @else
@@ -67,9 +67,9 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs {{ $balanceHoy >= 0 ? 'text-blue-600' : 'text-orange-600' }} font-medium">Balance</p>
-                                <p class="text-sm font-bold {{ $balanceHoy >= 0 ? 'text-blue-700' : 'text-orange-700' }}">
-                                    {{ $balanceHoy >= 0 ? '+' : '' }}${{ number_format($balanceHoy, 0) }}
+                                <p class="text-sm {{ $balanceHoy >= 0 ? 'text-blue-600' : 'text-orange-600' }} font-semibold">Balance</p>
+                                <p class="text-lg font-bold {{ $balanceHoy >= 0 ? 'text-blue-700' : 'text-orange-700' }}">
+                                    {{ $balanceHoy >= 0 ? '+' : '' }}${{ number_format($balanceHoy, 2) }}
                                 </p>
                             </div>
                         </div>
@@ -147,57 +147,57 @@
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Nueva Transacción -->
-                    <a href="{{ route('transacciones.create') }}" class="group relative bg-gradient-to-r from-blue-500 to-blue-600 p-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-lg text-center hover:from-blue-600 hover:to-blue-700 transition duration-200">
+                    <a href="{{ route('transacciones.create') }}" class="group relative bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 p-5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-300 rounded-xl text-center hover:shadow-md hover:border-slate-300 transition-all duration-200">
                         <div>
-                            <span class="rounded-lg inline-flex p-2 bg-white bg-opacity-20">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span class="rounded-lg inline-flex p-3 bg-gradient-to-br from-blue-100 to-blue-200 group-hover:from-blue-200 group-hover:to-blue-300 transition-all duration-200">
+                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                 </svg>
                             </span>
                         </div>
-                        <div class="mt-3">
-                            <h3 class="text-sm font-medium text-white">
+                        <div class="mt-4">
+                            <h3 class="text-sm font-semibold text-slate-800">
                                 Nueva Transacción
                             </h3>
-                            <p class="mt-1 text-xs text-blue-100">
+                            <p class="mt-1 text-xs text-slate-500">
                                 Registrar ingreso o egreso
                             </p>
                         </div>
                     </a>
 
                     <!-- Nuevo Contacto -->
-                    <a href="{{ route('contactos.create') }}" class="group relative bg-gradient-to-r from-green-500 to-green-600 p-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 rounded-lg text-center hover:from-green-600 hover:to-green-700 transition duration-200">
+                    <a href="{{ route('contactos.create') }}" class="group relative bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 p-5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-300 rounded-xl text-center hover:shadow-md hover:border-slate-300 transition-all duration-200">
                         <div>
-                            <span class="rounded-lg inline-flex p-2 bg-white bg-opacity-20">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span class="rounded-lg inline-flex p-3 bg-gradient-to-br from-emerald-100 to-emerald-200 group-hover:from-emerald-200 group-hover:to-emerald-300 transition-all duration-200">
+                                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                                 </svg>
                             </span>
                         </div>
-                        <div class="mt-3">
-                            <h3 class="text-sm font-medium text-white">
+                        <div class="mt-4">
+                            <h3 class="text-sm font-semibold text-slate-800">
                                 Nuevo Contacto
                             </h3>
-                            <p class="mt-1 text-xs text-green-100">
+                            <p class="mt-1 text-xs text-slate-500">
                                 Agregar cliente o proveedor
                             </p>
                         </div>
                     </a>
 
                     <!-- Ver Transacciones -->
-                    <a href="{{ route('transacciones.index') }}" class="group relative bg-gradient-to-r from-purple-500 to-purple-600 p-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 rounded-lg text-center hover:from-purple-600 hover:to-purple-700 transition duration-200">
+                    <a href="{{ route('transacciones.index') }}" class="group relative bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 p-5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-300 rounded-xl text-center hover:shadow-md hover:border-slate-300 transition-all duration-200">
                         <div>
-                            <span class="rounded-lg inline-flex p-2 bg-white bg-opacity-20">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span class="rounded-lg inline-flex p-3 bg-gradient-to-br from-violet-100 to-violet-200 group-hover:from-violet-200 group-hover:to-violet-300 transition-all duration-200">
+                                <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                                 </svg>
                             </span>
                         </div>
-                        <div class="mt-3">
-                            <h3 class="text-sm font-medium text-white">
+                        <div class="mt-4">
+                            <h3 class="text-sm font-semibold text-slate-800">
                                 Ver Transacciones
                             </h3>
-                            <p class="mt-1 text-xs text-purple-100">
+                            <p class="mt-1 text-xs text-slate-500">
                                 Gestión de ingresos y egresos
                             </p>
                         </div>
@@ -208,19 +208,19 @@
                         <button type="button" 
                                 id="reporteButton"
                                 onclick="toggleReporteDropdown()"
-                                class="w-full bg-gradient-to-r from-indigo-500 to-indigo-600 p-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-lg text-center hover:from-indigo-600 hover:to-indigo-700 transition duration-200">
+                                class="w-full bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 p-5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-300 rounded-xl text-center hover:shadow-md hover:border-slate-300 transition-all duration-200">
                             <div>
-                                <span class="rounded-lg inline-flex p-2 bg-white bg-opacity-20">
-                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <span class="rounded-lg inline-flex p-3 bg-gradient-to-br from-amber-100 to-amber-200 group-hover:from-amber-200 group-hover:to-amber-300 transition-all duration-200">
+                                    <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                     </svg>
                                 </span>
                             </div>
-                            <div class="mt-3">
-                                <h3 class="text-sm font-medium text-white">
+                            <div class="mt-4">
+                                <h3 class="text-sm font-semibold text-slate-800">
                                     Reporte Diario
                                 </h3>
-                                <p class="mt-1 text-xs text-indigo-100">
+                                <p class="mt-1 text-xs text-slate-500">
                                     Descargar resumen del día
                                 </p>
                             </div>
