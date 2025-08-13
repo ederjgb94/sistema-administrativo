@@ -7,9 +7,12 @@ use App\Models\Contacto;
 use App\Models\MetodoPago;
 use App\Models\Transaccion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransaccionController extends Controller
 {
@@ -316,11 +319,133 @@ class TransaccionController extends Controller
     }
 
     /**
-     * Exportar transacciones (para futuras implementaciones)
+     * Exportar transacciones como PDF
      */
     public function export(Request $request)
     {
-        // TODO: Implementar exportación a Excel/PDF
-        return back()->with('info', 'Funcionalidad de exportación en desarrollo.');
+        try {
+            Log::info('=== INICIO EXPORT PDF ===', [
+                'user_id' => Auth::id(),
+                'filtros' => $request->all(),
+                'url' => $request->fullUrl()
+            ]);
+
+            // Obtener los mismos filtros que usa el index
+            $query = Transaccion::with(['contacto', 'metodoPago']);
+
+            // Aplicar filtros si existen (mismos que en index)
+            if ($request->filled('search')) {
+                $search = $request->search;
+                Log::info('Aplicando filtro de búsqueda', ['search' => $search]);
+                $query->where(function ($q) use ($search) {
+                    $q->where('folio', 'like', "%{$search}%")
+                        ->orWhere('referencia_nombre', 'like', "%{$search}%")
+                        ->orWhere('factura_numero', 'like', "%{$search}%")
+                        ->orWhere('referencia_pago', 'like', "%{$search}%")
+                        ->orWhere('observaciones', 'like', "%{$search}%")
+                        ->orWhereHas('contacto', function ($q) use ($search) {
+                            $q->where('nombre', 'like', "%{$search}%");
+                        });
+                });
+            }
+
+            if ($request->filled('tipo')) {
+                Log::info('Aplicando filtro de tipo', ['tipo' => $request->tipo]);
+                $query->where('tipo', $request->tipo);
+            }
+
+            if ($request->filled('fecha_desde')) {
+                Log::info('Aplicando filtro de fecha desde', ['fecha_desde' => $request->fecha_desde]);
+                $query->whereDate('fecha', '>=', $request->fecha_desde);
+            }
+
+            if ($request->filled('fecha_hasta')) {
+                Log::info('Aplicando filtro de fecha hasta', ['fecha_hasta' => $request->fecha_hasta]);
+                $query->whereDate('fecha', '<=', $request->fecha_hasta);
+            }
+
+            if ($request->filled('contacto_id')) {
+                Log::info('Aplicando filtro de contacto', ['contacto_id' => $request->contacto_id]);
+                $query->where('contacto_id', $request->contacto_id);
+            }
+
+            if ($request->filled('metodo_pago_id')) {
+                Log::info('Aplicando filtro de método de pago', ['metodo_pago_id' => $request->metodo_pago_id]);
+                $query->where('metodo_pago_id', $request->metodo_pago_id);
+            }
+
+            if ($request->filled('referencia_tipo')) {
+                Log::info('Aplicando filtro de tipo de referencia', ['referencia_tipo' => $request->referencia_tipo]);
+                $query->where('referencia_tipo', $request->referencia_tipo);
+            }
+
+            if ($request->filled('factura_tipo')) {
+                Log::info('Aplicando filtro de tipo de factura', ['factura_tipo' => $request->factura_tipo]);
+                $query->where('factura_tipo', $request->factura_tipo);
+            }
+
+            // Obtener todas las transacciones (sin paginación para el PDF)
+            $transacciones = $query->orderBy('fecha', 'desc')->orderBy('created_at', 'desc')->get();
+
+            Log::info('Transacciones obtenidas', [
+                'count' => $transacciones->count(),
+                'sql' => $query->toSql(),
+                'bindings' => $query->getBindings()
+            ]);
+
+            // Preparar datos para la vista
+            $data = [
+                'transacciones' => $transacciones,
+                'filtros' => $request->all(),
+                'fecha_generacion' => now()->format('d/m/Y H:i'),
+                'total_registros' => $transacciones->count(),
+                'total_ingresos' => $transacciones->where('tipo', 'ingreso')->sum('total'),
+                'total_egresos' => $transacciones->where('tipo', 'egreso')->sum('total')
+            ];
+
+            Log::info('Datos preparados para el PDF', [
+                'total_registros' => $data['total_registros'],
+                'total_ingresos' => $data['total_ingresos'],
+                'total_egresos' => $data['total_egresos']
+            ]);
+
+            // Generar el PDF con la vista
+            $pdf = Pdf::loadView('transacciones.export-pdf', $data);
+
+            // Configuración básica
+            $pdf->setPaper('a4');
+
+            // Configurar opciones de DomPDF
+            $dompdf = $pdf->getDomPDF();
+            $dompdf->set_option('isPhpEnabled', true);
+            $dompdf->set_option('enable_javascript', true);
+            $dompdf->set_option('isRemoteEnabled', true);
+            $dompdf->set_option('isHtml5ParserEnabled', true);
+
+            Log::info('PDF generado exitosamente');
+
+            $filename = 'transacciones_' . now()->format('Y-m-d_H-i-s') . '.pdf';
+
+            Log::info('Enviando descarga', ['filename' => $filename]);
+
+            return $pdf->download($filename);
+        } catch (\Exception $e) {
+            Log::error('=== ERROR EN EXPORT PDF ===', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => substr($e->getTraceAsString(), 0, 2000)
+            ]);
+
+            // Si es una petición AJAX, devolver JSON
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'error' => true,
+                    'message' => $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
     }
 }

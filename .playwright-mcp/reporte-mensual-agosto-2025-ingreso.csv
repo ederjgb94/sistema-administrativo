@@ -1,0 +1,21 @@
+﻿"REPORTE MENSUAL"
+Mes:,"Agosto 2025"
+"Tipo de Transacción:",Ingreso
+
+"RESUMEN GENERAL"
+"Total Ingresos:","$75,400.00"
+"Total Egresos:",$0.00
+Balance:,"$75,400.00"
+Transacciones:,1
+
+"RESUMEN POR DÍA"
+Fecha,Ingresos,Egresos,Balance,Transacciones
+04/08/2025,"$75,400.00",$0.00,"$75,400.00",1
+
+"RESUMEN POR SEMANA"
+Semana,Período,Ingresos,Egresos,Balance,Transacciones
+"Semana 32","04/08 - 10/08","$75,400.00",$0.00,"$75,400.00",1
+
+"DETALLE DE TRANSACCIONES"
+Folio,Tipo,Fecha,Contacto,Descripción,"Método de Pago",Total,Observaciones
+ING-001,Ingreso,04/08/2025,"Juan Pérez García",,Transferencia,"$75,400.00","Primer pago de la obra, 50% del total acordado."

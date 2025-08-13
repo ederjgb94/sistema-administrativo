@@ -36,7 +36,7 @@ class AuthenticationTest extends TestCase
 
         // Verificar redirección al dashboard
         $response->assertRedirect('/dashboard');
-        
+
         // Verificar que el usuario está autenticado
         $this->assertAuthenticatedAs($user);
     }
@@ -54,7 +54,7 @@ class AuthenticationTest extends TestCase
 
         // Verificar que hay errores de validación
         $response->assertSessionHasErrors();
-        
+
         // Verificar que no hay usuario autenticado
         $this->assertGuest();
     }
@@ -65,6 +65,7 @@ class AuthenticationTest extends TestCase
     public function test_logout_functionality(): void
     {
         // Crear y autenticar usuario
+        /** @var User $user */
         $user = User::factory()->create([
             'email' => 'test@logout.com',
             'password' => bcrypt('password123'),
@@ -80,7 +81,7 @@ class AuthenticationTest extends TestCase
 
         // Verificar redirección a home
         $response->assertRedirect('/');
-        
+
         // Verificar que ya no está autenticado
         $this->assertGuest();
     }
@@ -103,6 +104,7 @@ class AuthenticationTest extends TestCase
     public function test_authenticated_user_can_access_dashboard(): void
     {
         // Crear y autenticar usuario
+        /** @var User $user */
         $user = User::factory()->create([
             'name' => 'Dashboard User',
             'email' => 'dashboard@test.com',
@@ -115,7 +117,7 @@ class AuthenticationTest extends TestCase
 
         // Verificar respuesta exitosa
         $response->assertOk();
-        
+
         // Verificar contenido del dashboard
         $response->assertSee('Dashboard');
         $response->assertSee('Bienvenido, Dashboard User');
@@ -127,6 +129,7 @@ class AuthenticationTest extends TestCase
     public function test_root_redirects_authenticated_user_to_dashboard(): void
     {
         // Crear y autenticar usuario
+        /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 

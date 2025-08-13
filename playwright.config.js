@@ -41,7 +41,7 @@ export default defineConfig({
     // Configuración global para todos los tests
     use: {
         // URL base del proyecto
-        baseURL: 'http://127.0.0.1:8000',
+        baseURL: 'http://127.0.0.1:8001',
 
         // Configuración de browser
         headless: true,
@@ -95,8 +95,8 @@ export default defineConfig({
 
     // Servidor de desarrollo (Context7: automatizar setup)
     webServer: {
-        command: 'php artisan serve',
-        port: 8000,
+        command: 'php artisan serve --port=8001',
+        port: 8001,
         reuseExistingServer: !process.env.CI,
         timeout: 120000,
     },
