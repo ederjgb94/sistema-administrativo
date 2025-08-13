@@ -28,6 +28,9 @@ echo "🔧 Configurando ambiente..."
 # Generar key de aplicación si no existe
 php artisan key:generate --ansi
 
+# Crear enlace simbólico para storage
+php artisan storage:link
+
 # Ejecutar migraciones
 echo "📊 Ejecutando migraciones..."
 php artisan migrate --force
