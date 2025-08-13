@@ -82,7 +82,10 @@
                                 </svg>
                                 Correo Electrónico
                             </label>
-                            <input id="email" name="email" type="email" disabled
+                            <!-- Campo hidden para enviar el email en el formulario -->
+                            <input type="hidden" name="email" value="{{ $user->email }}">
+                            <!-- Campo visual solo para mostrar -->
+                            <input id="email" type="email" readonly
                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-500 cursor-not-allowed sm:text-sm"
                                    value="{{ $user->email }}">
                             <p class="mt-1 text-xs text-gray-500">
